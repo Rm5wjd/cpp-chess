@@ -1,5 +1,6 @@
 #include "Board.h"
 #include "ChessPiece.h"
+#include "Util.h"
 
 Board::Board() : board{nullptr, }
 {
@@ -75,7 +76,13 @@ void Board::Display()
 
 			if (board[i][j] != nullptr)
 			{
-				Render(board[i][j]->GetType());
+				Render(board[i][j]->GetType(), board[i][j]->GetTeam());
+			}
+
+			else
+			{
+				SetColor(4, 0);
+				std::cout << "Np";
 			}
 		}
 	}
@@ -83,8 +90,18 @@ void Board::Display()
 
 }
 
-void Board::Render(Piecetype type)
+void Board::Render(Piecetype type, Team team)
 {
+	if (team == Team::BLACK)
+	{
+		SetColor(9, 0);
+	}
+
+	else
+	{
+		SetColor(15, 0);
+	}
+
 	switch (type)
 	{
 	case Piecetype::PAWN:
@@ -114,13 +131,16 @@ void Board::GetCommand(Team team)
 {
 	int x, y;
 
+	gotoxy(2, 22);
 	if (team == Team::BLACK)
 	{
+		std::cout << "turn: Black";
 		x = START_X, y = START_Y;
 	}
 
 	else
 	{
+		std::cout << "turn: White";
 		x = START_X, y = START_Y + Y_SHIFT * 6;
 	}
 
@@ -170,6 +190,7 @@ void Board::GetCommand(Team team)
 				}
 				break;
 
+			case 'A':
 			case 'a':
 				// 이동할 수 있는 범위, 이동, 충돌 판정
 				if (CoordConvert(getxy().X, getxy().Y) == nullptr)
@@ -180,6 +201,12 @@ void Board::GetCommand(Team team)
 				}
 				else
 				{
+					if (CoordConvert(getxy().X, getxy().Y)->GetTeam() != team)
+					{
+						gotoxy(2, 20);
+						std::cout << "It's not your turn";
+						break;
+					}
 					CoordConvert(getxy().X, getxy().Y)->Move(getxy().X, getxy().Y);
 					system("cls");
 					return;
@@ -242,6 +269,8 @@ COORD Board::GetCommand(int x, int y)
 					x = END_X;
 				}
 				break;
+				
+			case 'A':
 			case 'a':
 				return getxy();
 			default:
@@ -266,12 +295,11 @@ void Board::MovePiece(int startX, int startY, int destX, int destY)
 		return;
 	}
 
+	// nullptr에 메모리 먼저 할당
+	Piecetype type = board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT]->GetType();
 
 	if (board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT] == nullptr)
 	{
-		// nullptr에 메모리 먼저 할당
-		Piecetype type = board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT]->GetType();
-
 		switch (type)
 		{
 		case Piecetype::PAWN:
@@ -297,6 +325,15 @@ void Board::MovePiece(int startX, int startY, int destX, int destY)
 		}
 		
 		board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT] = board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT];
+		board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT] = nullptr;
+	}
+
+	else
+	{
+		delete board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT];
+		board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT] = board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT];
+
+		//delete board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT];
 		board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT] = nullptr;
 	}
 	//system("cls");

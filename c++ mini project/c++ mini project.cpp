@@ -1,25 +1,30 @@
 ﻿#include <iostream>
 #include "Board.h"
 #include "ChessPiece.h"
+#include "Util.h"
 
 int main()
 {
 	// 1. 판 생성 ( 초기화)
-	//Board newBoard;
-	//newBoard.SwitchingConsoleCursor(true, 100);
-
 	ChessPiece::_board->SwitchingConsoleCursor(true, 100);
 	//Board::setBgColor(11);
 	bool blackTurn = false;
 	while (true)
 	{
+		// 조작키 안내
+		Board::gotoxy(35, 3);
+		std::cout << "Piece Select : A";
+		Board::gotoxy(35, 4);
+		std::cout << "Piece Move : A";
 		
 		// 3. 렌더링
-		//newBoard.Display();
+		SetColor(15, 0);
 		ChessPiece::_board->Display();
 		
+
+		
 		// 2. 커맨드 입력
-		//newBoard.GetCommand();
+		SetColor(2, 0);
 		if (blackTurn)
 		{
 			ChessPiece::_board->GetCommand(Team::BLACK);

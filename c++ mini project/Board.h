@@ -13,8 +13,8 @@
 
 #define START_X 2
 #define START_Y 3
-#define END_X START_X + (X_SHIFT * 8)
-#define END_Y START_Y + (Y_SHIFT * 8)
+#define END_X START_X + (X_SHIFT * 7)
+#define END_Y START_Y + (Y_SHIFT * 7)
 
 #define UP 72
 #define DOWN 80
@@ -29,7 +29,7 @@ private:
 public:
 	Board();
 	void Display();
-	void Render(Piecetype type);
+	void Render(Piecetype type, Team team);
 	ChessPiece* CoordConvert(int x, int y);
 	void GetCommand(Team team);
 	COORD GetCommand(int x, int y);
