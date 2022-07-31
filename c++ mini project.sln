@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "c++ mini project", "c++ mini project\c++ mini project.vcxproj", "{14E3FD02-529A-4933-8DE6-4BDD665F86C7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Debug|x64.ActiveCfg = Debug|x64
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Debug|x64.Build.0 = Debug|x64
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Debug|x86.ActiveCfg = Debug|Win32
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Debug|x86.Build.0 = Debug|Win32
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Release|x64.ActiveCfg = Release|x64
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Release|x64.Build.0 = Release|x64
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Release|x86.ActiveCfg = Release|Win32
+		{14E3FD02-529A-4933-8DE6-4BDD665F86C7}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08C9E5C8-A991-40C9-ADD8-9E7A56798D44}
+	EndGlobalSection
+EndGlobal
