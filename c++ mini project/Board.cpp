@@ -130,6 +130,7 @@ void Board::Render(Piecetype type, Team team)
 void Board::GetCommand(Team team)
 {
 	int x, y;
+	bool cancle = false;
 
 	gotoxy(2, 22);
 	if (team == Team::BLACK)
@@ -207,7 +208,15 @@ void Board::GetCommand(Team team)
 						std::cout << "It's not your turn";
 						break;
 					}
-					CoordConvert(getxy().X, getxy().Y)->Move(getxy().X, getxy().Y);
+					CoordConvert(getxy().X, getxy().Y)->Move(getxy().X, getxy().Y, cancle);
+
+					if (cancle)
+					{
+						gotoxy(2, 20);
+						std::cout << "don't move, Choose piece again";
+						cancle = false;
+						break;
+					}
 					system("cls");
 					return;
 					//break;
