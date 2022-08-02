@@ -11,7 +11,7 @@
 #define X_SHIFT 4
 #define Y_SHIFT 2
 
-#define START_X 2
+#define START_X 4
 #define START_Y 3
 #define END_X START_X + (X_SHIFT * 7)
 #define END_Y START_Y + (Y_SHIFT * 7)
@@ -26,6 +26,8 @@ class Board
 {
 private:
 	ChessPiece* board[8][8];
+	ChessPiece* whiteKing;
+	ChessPiece* blackKing;
 public:
 	Board();
 	void Display();
@@ -34,6 +36,7 @@ public:
 	void GetCommand(Team team);
 	COORD GetCommand(int x, int y);
 	void MovePiece(int startX, int startY, int destX, int destY);
+	bool KingIsDie();
 
 	static void gotoxy(int x, int y);
 	static COORD getxy();

@@ -23,7 +23,43 @@ void ChessPiece::CheckPossibleMovement(int x, int y, std::vector<COORD>& possibl
 
 void ChessPiece::Move(int x, int y, bool& cancle)
 {
-	std::cout << "vritual funtion";
+	std::vector<COORD> possiblePos;
+	SetColor(2, 0);
+	CheckPossibleMovement(x, y, possiblePos);
+	SetColor(15, 0);
+
+	if (possiblePos.size() == 0)
+	{
+		cancle = true;
+		return;
+	}
+
+	int startX, startY;
+
+	startX = x;
+	startY = y;
+	while (true)
+	{
+		int destX, destY;
+
+		COORD destPos = _board->GetCommand(startX, startY);
+		destX = destPos.X;
+		destY = destPos.Y;
+
+		for (int i = 0; i < possiblePos.size(); i++)
+		{
+			if (destX == possiblePos[i].X && destY == possiblePos[i].Y)
+			{
+				_board->MovePiece(x, y, destX, destY);
+				_board->gotoxy(destY, destX);
+				return;
+			}
+		}
+		Board::gotoxy(4, 20);
+		std::cout << "don't move, Choose space again";
+		startX = destX;
+		startY = destY;
+	}
 }
 
 Piecetype ChessPiece::GetType() const
@@ -143,37 +179,6 @@ void Pawn::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 		}
 	}
 }
-
-void Pawn::Move(int x, int y, bool& cancle)
-{
-	std::vector<COORD> possiblePos;
-	Pawn::CheckPossibleMovement(x, y, possiblePos);
-
-	if (possiblePos.size() == 0)
-	{
-		cancle = true;
-		return;
-	}
-		
-	while (true)
-	{
-		int destX, destY;
-		COORD destPos = _board->GetCommand(x, y);
-		destX = destPos.X;
-		destY = destPos.Y;
-
-		for (int i = 0; i < possiblePos.size(); i++)
-		{
-			if (destX == possiblePos[i].X && destY == possiblePos[i].Y)
-			{
-				_board->MovePiece(x, y, destX, destY);
-				_board->gotoxy(destY, destX);
-				return;
-			}
-		}
-	}
-}
-
 #pragma endregion
 
 #pragma region "Rock Class"
@@ -269,36 +274,6 @@ void Rock::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 		}
 	}
 }
-
-void Rock::Move(int x, int y, bool& cancle)
-{
-	std::vector<COORD> possiblePos;
-	Rock::CheckPossibleMovement(x, y, possiblePos);
-
-	if (possiblePos.size() == 0)
-	{
-		cancle = true;
-		return;
-	}
-
-	while (true)
-	{
-		int destX, destY;
-		COORD destPos = _board->GetCommand(x, y);
-		destX = destPos.X;
-		destY = destPos.Y;
-
-		for (int i = 0; i < possiblePos.size(); i++)
-		{
-			if (destX == possiblePos[i].X && destY == possiblePos[i].Y)
-			{
-				_board->MovePiece(x, y, destX, destY);
-				_board->gotoxy(destY, destX);
-				return;
-			}
-		}
-	}
-}
 #pragma endregion
 
 #pragma region "Bishop Class"
@@ -316,12 +291,84 @@ Bishop::Bishop(Piecetype type, Team team)
 
 void Bishop::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 {
+	COORD direction[4] = { COORD{-X_SHIFT, -Y_SHIFT}, COORD{-X_SHIFT, Y_SHIFT}, COORD{X_SHIFT, -Y_SHIFT}, COORD{X_SHIFT, Y_SHIFT} }; 
+	// 북서 남서 북동 남동
 
-}
+	if (GetTeam() == Team::BLACK)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int count = 1;
+			while (true)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
 
-void Bishop::Move(int x, int y, bool& cancle)
-{
 
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
+
+	else
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			int count = 1;
+			while (true)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
+
+
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
 }
 #pragma endregion
 
@@ -340,12 +387,85 @@ Knight::Knight(Piecetype type, Team team)
 
 void Knight::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 {
+	COORD direction[8] = { COORD{-X_SHIFT * 2, -Y_SHIFT}, COORD{-X_SHIFT, -Y_SHIFT * 2}, COORD{X_SHIFT, -Y_SHIFT * 2}, COORD{X_SHIFT * 2, -Y_SHIFT},
+							COORD{X_SHIFT * 2, Y_SHIFT}, COORD{X_SHIFT, Y_SHIFT * 2}, COORD{-X_SHIFT, Y_SHIFT * 2}, COORD{-X_SHIFT * 2, Y_SHIFT} };
+	// 나이트 8방향
 
-}
+	if (GetTeam() == Team::BLACK)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (count <= 1)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
 
-void Knight::Move(int x, int y, bool& cancle)
-{
 
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
+
+	else
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (count <= 1)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
+
+
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
 }
 #pragma endregion
 
@@ -364,12 +484,85 @@ King::King(Piecetype type, Team team)
 
 void King::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 {
+	COORD direction[8] = { COORD{-X_SHIFT, -Y_SHIFT}, COORD{-X_SHIFT, Y_SHIFT}, COORD{X_SHIFT, -Y_SHIFT}, COORD{X_SHIFT, Y_SHIFT},
+							COORD{0, -Y_SHIFT}, COORD{0, Y_SHIFT}, COORD{-X_SHIFT, 0}, COORD{X_SHIFT, 0} };
+	// 8방향
 
-}
+	if (GetTeam() == Team::BLACK)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (count <= 1)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
 
-void King::Move(int x, int y, bool& cancle)
-{
 
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
+
+	else
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (count <= 1)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
+
+
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
 }
 #pragma endregion
 
@@ -389,10 +582,84 @@ Queen::Queen(Piecetype type, Team team)
 void Queen::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 {
 
-}
+	COORD direction[8] = { COORD{-X_SHIFT, -Y_SHIFT}, COORD{-X_SHIFT, Y_SHIFT}, COORD{X_SHIFT, -Y_SHIFT}, COORD{X_SHIFT, Y_SHIFT},
+							COORD{0, -Y_SHIFT}, COORD{0, Y_SHIFT}, COORD{-X_SHIFT, 0}, COORD{X_SHIFT, 0} };
+	// 8방향
 
-void Queen::Move(int x, int y, bool& cancle)
-{
+	if (GetTeam() == Team::BLACK)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (true)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
 
+
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
+
+	else
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			int count = 1;
+			while (true)
+			{
+				if (x + direction[i].X * count < START_X || x + direction[i].X * count > END_X ||
+					y + direction[i].Y * count < START_Y || y + direction[i].Y * count > END_Y)
+				{
+					break;
+				}
+
+
+				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "O";
+				}
+
+				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
+				{
+					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(Board::getxy());
+					std::cout << "X";
+					break;
+				}
+
+				else
+				{
+					break;
+				}
+				count++;
+			}
+		}
+	}
 }
 #pragma endregion

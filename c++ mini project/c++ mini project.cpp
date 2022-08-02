@@ -12,10 +12,10 @@ int main()
 	while (true)
 	{
 		// 조작키 안내
-		Board::gotoxy(35, 3);
-		std::cout << "Piece Select : A";
-		Board::gotoxy(35, 4);
-		std::cout << "Piece Move : A";
+		Board::gotoxy(37, 3);
+		std::cout << "Select piece : A";
+		Board::gotoxy(37, 4);
+		std::cout << "Move piece : A";
 		
 		// 3. 렌더링
 		SetColor(15, 0);
@@ -24,7 +24,7 @@ int main()
 
 		
 		// 2. 커맨드 입력
-		SetColor(2, 0);
+		//SetColor(2, 0);
 		if (blackTurn)
 		{
 			ChessPiece::_board->GetCommand(Team::BLACK);

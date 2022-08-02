@@ -9,6 +9,7 @@ Board::Board() : board{nullptr, }
 	board[0][1] = new Knight(Piecetype::KNIGHT, Team::BLACK);
 	board[0][2] = new Bishop(Piecetype::BISHOP, Team::BLACK);
 	board[0][3] = new King(Piecetype::KING, Team::BLACK);
+	blackKing = board[0][3];
 	board[0][4] = new Queen(Piecetype::QUEEN, Team::BLACK);
 	board[0][5] = new Bishop(Piecetype::BISHOP, Team::BLACK);
 	board[0][6] = new Knight(Piecetype::KNIGHT, Team::BLACK);
@@ -28,6 +29,7 @@ Board::Board() : board{nullptr, }
 	board[7][1] = new Knight(Piecetype::KNIGHT, Team::WHITE);
 	board[7][2] = new Bishop(Piecetype::BISHOP, Team::WHITE);
 	board[7][3] = new King(Piecetype::KING, Team::WHITE);
+	whiteKing = board[7][3];
 	board[7][4] = new Queen(Piecetype::QUEEN, Team::WHITE);
 	board[7][5] = new Bishop(Piecetype::BISHOP, Team::WHITE);
 	board[7][6] = new Knight(Piecetype::KNIGHT, Team::WHITE);
@@ -46,6 +48,28 @@ Board::Board() : board{nullptr, }
 
 void Board::Display()
 {
+	if (KingIsDie())
+	{
+		exit(1);
+	}
+
+	int num = 1;
+	for (int y = START_Y; y < START_Y + (Y_SHIFT * 8); y += Y_SHIFT)
+	{
+		int x = START_X - 3;
+		gotoxy(x, y);
+		std::cout << num++;
+	}
+
+	char alphabet = 65;
+	for (int x = START_X; x < START_X + (X_SHIFT * 8); x += X_SHIFT)
+	{
+		int y = START_Y - 2;
+		gotoxy(x, y);
+		std::cout << alphabet++;
+	}
+
+
 	for (int x = START_X; x < START_X + (X_SHIFT * 8); x += X_SHIFT)
 	{
 		for (int y = START_Y - 1; y < (START_Y - 1) + (Y_SHIFT * 9); y += Y_SHIFT)
@@ -79,11 +103,11 @@ void Board::Display()
 				Render(board[i][j]->GetType(), board[i][j]->GetTeam());
 			}
 
-			else
+			/*else
 			{
 				SetColor(4, 0);
 				std::cout << "Np";
-			}
+			}*/
 		}
 	}
 
@@ -132,7 +156,7 @@ void Board::GetCommand(Team team)
 	int x, y;
 	bool cancle = false;
 
-	gotoxy(2, 22);
+	gotoxy(4, 22);
 	if (team == Team::BLACK)
 	{
 		std::cout << "turn: Black";
@@ -196,7 +220,7 @@ void Board::GetCommand(Team team)
 				// 이동할 수 있는 범위, 이동, 충돌 판정
 				if (CoordConvert(getxy().X, getxy().Y) == nullptr)
 				{
-					gotoxy(2, 20);
+					gotoxy(4, 20);
 					std::cout << "have no piece, Choose again";
 					break;
 				}
@@ -204,15 +228,15 @@ void Board::GetCommand(Team team)
 				{
 					if (CoordConvert(getxy().X, getxy().Y)->GetTeam() != team)
 					{
-						gotoxy(2, 20);
+						gotoxy(4, 20);
 						std::cout << "It's not your turn";
 						break;
 					}
-					CoordConvert(getxy().X, getxy().Y)->Move(getxy().X, getxy().Y, cancle);
 
+					CoordConvert(getxy().X, getxy().Y)->Move(getxy().X, getxy().Y, cancle);
 					if (cancle)
 					{
-						gotoxy(2, 20);
+						gotoxy(4, 20);
 						std::cout << "don't move, Choose piece again";
 						cancle = false;
 						break;
@@ -347,6 +371,20 @@ void Board::MovePiece(int startX, int startY, int destX, int destY)
 	}
 	//system("cls");
 }
+
+bool Board::KingIsDie()
+{
+	if (blackKing->GetType() == Piecetype::KING && whiteKing->GetType() == Piecetype::KING)
+	{
+		return false;
+	}
+
+	else
+	{
+		return true;
+	}
+}
+
 
 void Board::gotoxy(int x, int y)
 {

@@ -2,6 +2,7 @@
 #ifndef __CHESS_PIECE_H__
 #define __CHESS_PIECE_H__
 #include "Define.h"
+#include "Util.h"
 #include <cstdio>
 #include <windows.h>
 #include <conio.h>
@@ -21,7 +22,7 @@ public:
 	Piecetype GetType() const;
 	Team GetTeam() const;
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
+	void Move(int x, int y, bool& cancle);
 	static Board* _board;
 	// ¼Ò¸êÀÚ
 	~ChessPiece() {};
@@ -32,15 +33,11 @@ class Pawn : public ChessPiece
 {
 private:
 	bool firstMove;
-	//bool isMove;
-	//bool isrightAtk;
-	//bool isleftAtk;
 public:
 	Pawn();
 	Pawn(Piecetype type, Team team, bool firstMove);
 	void firstMoveOff();
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 
 class Rock : public ChessPiece
@@ -50,7 +47,6 @@ public:
 	Rock();
 	Rock(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 
 class Bishop : public ChessPiece
@@ -60,7 +56,6 @@ public:
 	Bishop();
 	Bishop(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 
 class Knight : public ChessPiece
@@ -70,7 +65,6 @@ public:
 	Knight();
 	Knight(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 
 class Queen : public ChessPiece
@@ -80,7 +74,6 @@ public:
 	Queen();
 	Queen(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 
 class King : public ChessPiece
@@ -90,6 +83,5 @@ public:
 	King();
 	King(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
-	virtual void Move(int x, int y, bool& cancle);
 };
 #endif
