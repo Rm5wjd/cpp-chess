@@ -9,7 +9,7 @@ Board::Board() : board{nullptr, }
 	board[0][1] = new Knight(Piecetype::KNIGHT, Team::BLACK);
 	board[0][2] = new Bishop(Piecetype::BISHOP, Team::BLACK);
 	board[0][3] = new King(Piecetype::KING, Team::BLACK);
-	blackKing = board[0][3];
+	//blackKing = board[0][3];
 	board[0][4] = new Queen(Piecetype::QUEEN, Team::BLACK);
 	board[0][5] = new Bishop(Piecetype::BISHOP, Team::BLACK);
 	board[0][6] = new Knight(Piecetype::KNIGHT, Team::BLACK);
@@ -29,7 +29,7 @@ Board::Board() : board{nullptr, }
 	board[7][1] = new Knight(Piecetype::KNIGHT, Team::WHITE);
 	board[7][2] = new Bishop(Piecetype::BISHOP, Team::WHITE);
 	board[7][3] = new King(Piecetype::KING, Team::WHITE);
-	whiteKing = board[7][3];
+	//whiteKing = board[7][3];
 	board[7][4] = new Queen(Piecetype::QUEEN, Team::WHITE);
 	board[7][5] = new Bishop(Piecetype::BISHOP, Team::WHITE);
 	board[7][6] = new Knight(Piecetype::KNIGHT, Team::WHITE);
@@ -50,9 +50,20 @@ void Board::Display()
 {
 	if (KingIsDie())
 	{
-		exit(1);
+		Sleep(2000);
+		exit(0);
 	}
+	// 조작키 안내
+	gotoxy(37, 3);
+	std::cout << "Select piece : SPACEBAR";
+	gotoxy(37, 5);
+	std::cout << "Move piece : SPACEBAR";
+	gotoxy(37, 7);
+	std::cout << "Game Exit : ESC";
+	gotoxy(37, 9);
+	std::cout << "Game Reset : R";
 
+	//좌표
 	int num = 1;
 	for (int y = START_Y; y < START_Y + (Y_SHIFT * 8); y += Y_SHIFT)
 	{
@@ -215,8 +226,7 @@ void Board::GetCommand(Team team)
 				}
 				break;
 
-			case 'A':
-			case 'a':
+			case SPACEBAR:
 				// 이동할 수 있는 범위, 이동, 충돌 판정
 				if (CoordConvert(getxy().X, getxy().Y) == nullptr)
 				{
@@ -243,8 +253,21 @@ void Board::GetCommand(Team team)
 					}
 					system("cls");
 					return;
-					//break;
 				}
+			case ESC:
+				system("cls");
+				std::cout << "EXIT THE GAME ...";
+				Sleep(1000);
+				exit(0);
+			case 'R':
+			case 'r':
+				Restart();
+				system("cls");
+				std::cout << "GAME RESET ...";
+				Sleep(1000);
+				system("cls");
+				return;
+
 			default:
 				break;
 			}
@@ -303,9 +326,14 @@ COORD Board::GetCommand(int x, int y)
 				}
 				break;
 				
-			case 'A':
-			case 'a':
+			case SPACEBAR:
 				return getxy();
+
+			case ESC:
+				system("cls");
+				std::cout << "EXIT THE GAME ...";
+				Sleep(1000);
+				exit(0);
 			default:
 				break;
 			}
@@ -365,8 +393,6 @@ void Board::MovePiece(int startX, int startY, int destX, int destY)
 	{
 		delete board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT];
 		board[(destY - START_Y) / Y_SHIFT][(destX - START_X) / X_SHIFT] = board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT];
-
-		//delete board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT];
 		board[(startY - START_Y) / Y_SHIFT][(startX - START_X) / X_SHIFT] = nullptr;
 	}
 	//system("cls");
@@ -374,45 +400,99 @@ void Board::MovePiece(int startX, int startY, int destX, int destY)
 
 bool Board::KingIsDie()
 {
-	if (blackKing->GetType() == Piecetype::KING && whiteKing->GetType() == Piecetype::KING)
+	int blackCount = 0;
+	int whiteCount = 0;
+
+	for (int i = 0; i < 8; i++)
 	{
-		return false;
+		for (int j = 0; j < 8; j++)
+		{
+			if (board[i][j] != nullptr)
+			{
+				if (board[i][j]->GetType() == Piecetype::KING)
+				{
+					if (board[i][j]->GetTeam() == Team::WHITE)
+					{
+						whiteCount++;
+					}
+
+					else
+					{
+						blackCount++;
+					}
+				}
+			}
+		}
+	}
+
+	if (blackCount == 0)
+	{
+		std::cout << "White Win !!!";
+		return true;
+	}
+
+	else if (whiteCount == 0)
+	{
+		std::cout << "Black Win !!!";
+		return true;
 	}
 
 	else
 	{
-		return true;
+		return false;
 	}
 }
 
-
-void Board::gotoxy(int x, int y)
+void Board::Restart()
 {
-	COORD pos = { x, y };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-}
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			delete board[i][j];
+			board[i][j] = nullptr;
+		}
+	}
 
-COORD Board::getxy()
-{
-	CONSOLE_SCREEN_BUFFER_INFO cs;
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cs);
-	return cs.dwCursorPosition;
-}
+	// black
+	board[0][0] = new Rock(Piecetype::ROCK, Team::BLACK);
+	board[0][1] = new Knight(Piecetype::KNIGHT, Team::BLACK);
+	board[0][2] = new Bishop(Piecetype::BISHOP, Team::BLACK);
+	board[0][3] = new King(Piecetype::KING, Team::BLACK);
+	board[0][4] = new Queen(Piecetype::QUEEN, Team::BLACK);
+	board[0][5] = new Bishop(Piecetype::BISHOP, Team::BLACK);
+	board[0][6] = new Knight(Piecetype::KNIGHT, Team::BLACK);
+	board[0][7] = new Rock(Piecetype::ROCK, Team::BLACK);
 
-void Board::SwitchingConsoleCursor(bool flag, int size)
-{
-	CONSOLE_CURSOR_INFO cursorInfo;
-	cursorInfo.dwSize = size;
-	cursorInfo.bVisible = flag;
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
-}
+	board[1][0] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][1] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][2] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][3] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][4] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][5] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][6] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
+	board[1][7] = new Pawn(Piecetype::PAWN, Team::BLACK, true);
 
-void Board::setBgColor(int bgcolor) {
-	CONSOLE_SCREEN_BUFFER_INFO info;
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), ((bgcolor & 0xf) << 4) | (info.wAttributes & 0xf));
-}
+	// white
+	board[7][0] = new Rock(Piecetype::ROCK, Team::WHITE);
+	board[7][1] = new Knight(Piecetype::KNIGHT, Team::WHITE);
+	board[7][2] = new Bishop(Piecetype::BISHOP, Team::WHITE);
+	board[7][3] = new King(Piecetype::KING, Team::WHITE);
+	board[7][4] = new Queen(Piecetype::QUEEN, Team::WHITE);
+	board[7][5] = new Bishop(Piecetype::BISHOP, Team::WHITE);
+	board[7][6] = new Knight(Piecetype::KNIGHT, Team::WHITE);
+	board[7][7] = new Rock(Piecetype::ROCK, Team::WHITE);
 
+	board[6][0] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][1] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][2] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][3] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][4] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][5] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][6] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+	board[6][7] = new Pawn(Piecetype::PAWN, Team::WHITE, true);
+
+}
 
 Board::~Board()
 {

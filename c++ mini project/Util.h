@@ -22,3 +22,7 @@ enum {
 
 
 void SetColor(int textColor, int bgColor);
+void gotoxy(int x, int y);
+COORD getxy();
+void SwitchingConsoleCursor(bool flag, int size);
+void setBgColor(int bgcolor);

@@ -1,5 +1,6 @@
 #include "ChessPiece.h"
 #include "Board.h"
+#include "Util.h"
 
 #pragma region "베이스클래스"
 Board* ChessPiece::_board = new Board();
@@ -51,11 +52,11 @@ void ChessPiece::Move(int x, int y, bool& cancle)
 			if (destX == possiblePos[i].X && destY == possiblePos[i].Y)
 			{
 				_board->MovePiece(x, y, destX, destY);
-				_board->gotoxy(destY, destX);
+				gotoxy(destY, destX);
 				return;
 			}
 		}
-		Board::gotoxy(4, 20);
+		gotoxy(4, 20);
 		std::cout << "don't move, Choose space again";
 		startX = destX;
 		startY = destY;
@@ -109,16 +110,16 @@ void Pawn::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 	{
 		if (_board->CoordConvert(x, y + Y_SHIFT) == nullptr)
 		{
-			Board::gotoxy(x, y + Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x, y + Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "O";
 
 			if (firstMove)
 			{
 				if (_board->CoordConvert(x, y + Y_SHIFT * 2) == nullptr)
 				{
-					Board::gotoxy(x, y + Y_SHIFT * 2);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x, y + Y_SHIFT * 2);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 					firstMove = false;
 				}
@@ -128,16 +129,16 @@ void Pawn::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 		if (_board->CoordConvert(x - X_SHIFT, y + Y_SHIFT) != nullptr && 
 			_board->CoordConvert(x - X_SHIFT, y + Y_SHIFT)->GetTeam() == Team::WHITE)
 		{
-			Board::gotoxy(x - X_SHIFT, y + Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x - X_SHIFT, y + Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "X";
 		}
 
 		if (_board->CoordConvert(x + X_SHIFT, y + Y_SHIFT) != nullptr &&
 			_board->CoordConvert(x + X_SHIFT, y + Y_SHIFT)->GetTeam() == Team::WHITE)
 		{
-			Board::gotoxy(x + X_SHIFT, y + Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x + X_SHIFT, y + Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "X";
 		}
 	}
@@ -146,16 +147,16 @@ void Pawn::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 	{
 		if (_board->CoordConvert(x, y - Y_SHIFT) == nullptr)
 		{
-			Board::gotoxy(x, y - Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x, y - Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "O";
 
 			if (firstMove)
 			{
 				if (_board->CoordConvert(x, y - Y_SHIFT * 2) == nullptr)
 				{
-					Board::gotoxy(x, y - Y_SHIFT * 2);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x, y - Y_SHIFT * 2);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 					firstMove = false;
 				}
@@ -165,16 +166,16 @@ void Pawn::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 		if (_board->CoordConvert(x - X_SHIFT, y - Y_SHIFT) != nullptr &&
 			_board->CoordConvert(x - X_SHIFT, y - Y_SHIFT)->GetTeam() == Team::BLACK)
 		{
-			Board::gotoxy(x - X_SHIFT, y - Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x - X_SHIFT, y - Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "X";
 		}
 
 		if (_board->CoordConvert(x + X_SHIFT, y - Y_SHIFT) != nullptr &&
 			_board->CoordConvert(x + X_SHIFT, y - Y_SHIFT)->GetTeam() == Team::BLACK)
 		{
-			Board::gotoxy(x + X_SHIFT, y - Y_SHIFT);
-			possiblePos.push_back(Board::getxy());
+			gotoxy(x + X_SHIFT, y - Y_SHIFT);
+			possiblePos.push_back(getxy());
 			std::cout << "X";
 		}
 	}
@@ -214,15 +215,15 @@ void Rock::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -252,15 +253,15 @@ void Rock::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr &&_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -310,15 +311,15 @@ void Bishop::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -348,15 +349,15 @@ void Bishop::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -407,15 +408,15 @@ void Knight::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -445,15 +446,15 @@ void Knight::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -504,15 +505,15 @@ void King::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -542,15 +543,15 @@ void King::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -563,6 +564,11 @@ void King::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 			}
 		}
 	}
+}
+
+King::~King()
+{
+
 }
 #pragma endregion
 
@@ -602,15 +608,15 @@ void Queen::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::WHITE)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}
@@ -640,15 +646,15 @@ void Queen::CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos)
 
 				if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) == nullptr)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "O";
 				}
 
 				else if (_board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count) != nullptr && _board->CoordConvert(x + direction[i].X * count, y + direction[i].Y * count)->GetTeam() == Team::BLACK)
 				{
-					Board::gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
-					possiblePos.push_back(Board::getxy());
+					gotoxy(x + direction[i].X * count, y + direction[i].Y * count);
+					possiblePos.push_back(getxy());
 					std::cout << "X";
 					break;
 				}

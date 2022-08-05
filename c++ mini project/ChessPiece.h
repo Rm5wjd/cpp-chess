@@ -13,7 +13,7 @@ class ChessPiece
 {
 private:
 	Piecetype type; // 자신만의 타입(기물모양)
-	Team team; // 0:흑 1:백
+	Team team;
 	
 public:
 	// 생성자
@@ -83,5 +83,6 @@ public:
 	King();
 	King(Piecetype type, Team team);
 	virtual void CheckPossibleMovement(int x, int y, std::vector<COORD>& possiblePos);
+	~King();
 };
 #endif

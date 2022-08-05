@@ -20,14 +20,14 @@
 #define DOWN 80
 #define RIGHT 77
 #define LEFT 75
+#define ESC 27
+#define SPACEBAR 32
 
 class ChessPiece;
 class Board
 {
 private:
 	ChessPiece* board[8][8];
-	ChessPiece* whiteKing;
-	ChessPiece* blackKing;
 public:
 	Board();
 	void Display();
@@ -37,11 +37,7 @@ public:
 	COORD GetCommand(int x, int y);
 	void MovePiece(int startX, int startY, int destX, int destY);
 	bool KingIsDie();
-
-	static void gotoxy(int x, int y);
-	static COORD getxy();
-	static void SwitchingConsoleCursor(bool flag, int size);
-	static void setBgColor(int bgcolor);
+	void Restart();
 	~Board();
 };
 
