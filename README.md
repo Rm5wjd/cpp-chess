@@ -1,5 +1,3 @@
 # cpp-chess
 
-Uploading C__Users_audrm_Documents_GitHub_c-mini-project_x64_Debug_c++ mini project.exe 2022-08-06 16-56-12.mp4…
-
-<img src="Uploading C__Users_audrm_Documents_GitHub_c-mini-project_x64_Debug_c++ mini project.exe 2022-08-06 16-56-12.mp4…">
+<img src="https://user-images.githubusercontent.com/98721297/183240760-fba4ecb7-c9c3-402e-8750-32520605c452.gif">
